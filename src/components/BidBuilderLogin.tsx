@@ -9,9 +9,10 @@ interface LoginCredentials {
 interface LoginFormProps {
   onLogin?: (credentials: LoginCredentials) => Promise<void>;
   onLoginSuccess?: () => void;
+  onCreateAccount?: () => void; // Navigate to create account page
 }
 
-const BidBuilderLogin: React.FC<LoginFormProps> = ({ onLogin, onLoginSuccess }) => {
+const BidBuilderLogin: React.FC<LoginFormProps> = ({ onLogin, onLoginSuccess, onCreateAccount }) => {
   const [credentials, setCredentials] = useState<LoginCredentials>({
     email: '',
     password: ''
@@ -23,7 +24,6 @@ const BidBuilderLogin: React.FC<LoginFormProps> = ({ onLogin, onLoginSuccess }) 
 
   const handleInputChange = (field: keyof LoginCredentials, value: string) => {
     setCredentials(prev => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
     if (error) setError(null);
   };
 
@@ -59,7 +59,6 @@ const BidBuilderLogin: React.FC<LoginFormProps> = ({ onLogin, onLoginSuccess }) 
     
     try {
       if (onLogin) {
-        // Use the provided login function
         await onLogin(credentials);
         if (onLoginSuccess) {
           onLoginSuccess();
@@ -69,9 +68,9 @@ const BidBuilderLogin: React.FC<LoginFormProps> = ({ onLogin, onLoginSuccess }) 
         await new Promise(resolve => setTimeout(resolve, 1500));
         
         // Demo credentials check
-        if (credentials.email === 'demo@bidbuilder.com' && credentials.password === 'demo1234') {
+        if (credentials.email === 'demo@bidbuilder.com' && credentials.password === 'demo123') {
           console.log('Demo login successful');
-          alert('Login successful! In a real app with routing, you would be redirected to /bidbuilder');
+          alert('Login successful! In a real app with routing, you would be redirected to /dashboard');
           if (onLoginSuccess) {
             onLoginSuccess();
           }
@@ -104,7 +103,7 @@ const BidBuilderLogin: React.FC<LoginFormProps> = ({ onLogin, onLoginSuccess }) 
           <p className="text-gray-600">Pool Sales Quote Platform</p>
         </div>
 
-        {/* Login Card */}
+        {/* Login Form */}
         <div className="bg-white rounded-2xl shadow-xl p-6 mb-6">
           <div className="space-y-6">
             {/* Error Message */}
@@ -218,8 +217,26 @@ const BidBuilderLogin: React.FC<LoginFormProps> = ({ onLogin, onLoginSuccess }) 
           <p className="text-sm font-medium text-yellow-800 mb-1">Demo Credentials</p>
           <p className="text-xs text-yellow-700">
             Email: demo@bidbuilder.com<br />
-            Password: demo1234
+            Password: demo123
           </p>
+        </div>
+
+        {/* Create Account Button */}
+        <div className="mb-4">
+          <button
+            onClick={() => {
+              if (onCreateAccount) {
+                onCreateAccount();
+              } else {
+                alert('Create account functionality would navigate to your create account page');
+              }
+            }}
+            disabled={isLoading}
+            className="w-full bg-white hover:bg-gray-50 border-2 border-blue-600 text-blue-600 font-semibold py-4 px-6 rounded-xl transition-all duration-200 touch-manipulation disabled:opacity-50"
+            style={{ minHeight: '44px' }}
+          >
+            Create New Account
+          </button>
         </div>
 
         {/* Footer Links */}
