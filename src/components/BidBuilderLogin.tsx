@@ -69,7 +69,7 @@ const BidBuilderLogin: React.FC<LoginFormProps> = ({ onLogin, onLoginSuccess }) 
         await new Promise(resolve => setTimeout(resolve, 1500));
         
         // Demo credentials check
-        if (credentials.email === 'demo@bidbuilder.com' && credentials.password === 'demo123') {
+        if (credentials.email === 'demo@bidbuilder.com' && credentials.password === 'demo1234') {
           console.log('Demo login successful');
           alert('Login successful! In a real app with routing, you would be redirected to /bidbuilder');
           if (onLoginSuccess) {
@@ -218,7 +218,7 @@ const BidBuilderLogin: React.FC<LoginFormProps> = ({ onLogin, onLoginSuccess }) 
           <p className="text-sm font-medium text-yellow-800 mb-1">Demo Credentials</p>
           <p className="text-xs text-yellow-700">
             Email: demo@bidbuilder.com<br />
-            Password: demo123
+            Password: demo1234
           </p>
         </div>
 
