@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import BidBuilderLogin from './components/BidBuilderLogin';
 import BidBuilder from './components/BidBuilder';
+import BidBuilderCreateAccountPage from './components/BidBuilderCreateAccountPage';
 
 interface LoginCredentials {
   email: string;
@@ -54,6 +55,18 @@ const App: React.FC = () => {
           element={
             isAuthenticated ? (
               <BidBuilder onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } 
+        />
+
+        {/* Dashboard Route */}
+        <Route 
+          path="/dash" 
+          element={
+            isAuthenticated ? (
+              <BidBuilderCreateAccountPage onLogout={handleLogout} />
             ) : (
               <Navigate to="/login" replace />
             )

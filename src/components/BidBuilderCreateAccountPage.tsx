@@ -40,7 +40,7 @@ interface ValidationErrors {
   general?: string;
 }
 
-const CreateAccountPage: React.FC = () => {
+const BidBuilderCreateAccountPage: React.FC = () => {
   // Form state
   const [formData, setFormData] = useState<CreateAccountForm>({
     firstName: '',
@@ -660,4 +660,4 @@ const CreateAccountPage: React.FC = () => {
   );
 };
 
-export default CreateAccountPage;
+export default BidBuilderCreateAccountPage;
