@@ -13,7 +13,7 @@ const App: React.FC = () => {
 
   const handleLogin = async (credentials: LoginCredentials): Promise<void> => {
     // Demo authentication logic
-    if (credentials.email === 'demo@bidbuilder.com' && credentials.password === 'demo123') {
+    if (credentials.email === 'demo@bidbuilder.com' && credentials.password === 'demo1234') {
       setIsAuthenticated(true);
       return Promise.resolve();
     } else {
