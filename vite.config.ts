@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/bidbuilder/', // Replace with your repo name
+  base: '/BidBuilder/', // Replace with your repo name
 })
