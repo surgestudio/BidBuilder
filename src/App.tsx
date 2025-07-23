@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import BidBuilderLogin from './components/BidBuilderLogin';
 import BidBuilder from './components/BidBuilder';
 import BidBuilderCreateAccountPage from './components/BidBuilderCreateAccountPage';
@@ -8,6 +8,49 @@ interface LoginCredentials {
   email: string;
   password: string;
 }
+
+// Wrapper components to access useNavigate hook
+const LoginWrapper: React.FC<{
+  isAuthenticated: boolean;
+  onLogin: (credentials: LoginCredentials) => Promise<void>;
+  onLoginSuccess: () => void;
+}> = ({ isAuthenticated, onLogin, onLoginSuccess }) => {
+  const navigate = useNavigate();
+
+  if (isAuthenticated) {
+    return <Navigate to="/app" replace />;
+  }
+
+  return (
+    <BidBuilderLogin 
+      onLogin={onLogin}
+      onLoginSuccess={onLoginSuccess}
+      onCreateAccount={() => navigate('/create')}
+    />
+  );
+};
+
+const CreateAccountWrapper: React.FC<{
+  isAuthenticated: boolean;
+  setIsAuthenticated: (value: boolean) => void;
+}> = ({ isAuthenticated, setIsAuthenticated }) => {
+  const navigate = useNavigate();
+
+  if (isAuthenticated) {
+    return <Navigate to="/app" replace />;
+  }
+
+  return (
+    <BidBuilderCreateAccountPage 
+      onNavigateToLogin={() => navigate('/login')}
+      onAccountCreated={() => {
+        setIsAuthenticated(true);
+        // Navigate to app after setting authentication
+        setTimeout(() => navigate('/app'), 100);
+      }}
+    />
+  );
+};
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -38,14 +81,22 @@ const App: React.FC = () => {
         <Route 
           path="/login" 
           element={
-            !isAuthenticated ? (
-              <BidBuilderLogin 
-                onLogin={handleLogin}
-                onLoginSuccess={handleLoginSuccess}
-              />
-            ) : (
-              <Navigate to="/app" replace />
-            )
+            <LoginWrapper 
+              isAuthenticated={isAuthenticated}
+              onLogin={handleLogin}
+              onLoginSuccess={handleLoginSuccess}
+            />
+          } 
+        />
+        
+        {/* Create Account Route - No authentication required */}
+        <Route 
+          path="/create" 
+          element={
+            <CreateAccountWrapper 
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+            />
           } 
         />
         
@@ -55,18 +106,6 @@ const App: React.FC = () => {
           element={
             isAuthenticated ? (
               <BidBuilder onLogout={handleLogout} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          } 
-        />
-
-        {/* Dashboard Route */}
-        <Route 
-          path="/dash" 
-          element={
-            isAuthenticated ? (
-              <BidBuilderCreateAccountPage onLogout={handleLogout} />
             ) : (
               <Navigate to="/login" replace />
             )

@@ -40,7 +40,15 @@ interface ValidationErrors {
   general?: string;
 }
 
-const BidBuilderCreateAccountPage: React.FC = () => {
+interface CreateAccountPageProps {
+  onNavigateToLogin?: () => void;
+  onAccountCreated?: () => void;
+}
+
+const BidBuilderCreateAccountPage: React.FC<CreateAccountPageProps> = ({ 
+  onNavigateToLogin, 
+  onAccountCreated 
+}) => {
   // Form state
   const [formData, setFormData] = useState<CreateAccountForm>({
     firstName: '',
@@ -266,6 +274,13 @@ const BidBuilderCreateAccountPage: React.FC = () => {
       
       setIsSuccess(true);
       
+      // Auto-authenticate and navigate to app
+      if (onAccountCreated) {
+        setTimeout(() => {
+          onAccountCreated();
+        }, 1500); // Brief delay to show success message
+      }
+      
     } catch (error) {
       setErrors({
         general: error instanceof Error ? error.message : 'Failed to create account. Please try again.'
@@ -287,33 +302,9 @@ const BidBuilderCreateAccountPage: React.FC = () => {
           <p className="text-gray-600 mb-6">
             Welcome to BidBuilder, {formData.firstName}! Your {formData.role === 'manager' ? 'manager' : 'sales rep'} account has been successfully created.
           </p>
-          <div className="space-y-3">
-            <button 
-              onClick={() => alert('Redirecting to login...')}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-            >
-              Go to Login
-            </button>
-            <button 
-              onClick={() => {
-                setIsSuccess(false);
-                setFormData({
-                  firstName: '',
-                  lastName: '',
-                  email: '',
-                  phone: '',
-                  password: '',
-                  confirmPassword: '',
-                  role: 'rep',
-                  companyCode: '',
-                  profilePhoto: null
-                });
-                setPhotoPreview(null);
-              }}
-              className="w-full text-gray-600 py-2 text-sm hover:text-gray-800"
-            >
-              Create Another Account
-            </button>
+          <div className="flex items-center justify-center space-x-2 text-blue-600">
+            <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-sm">Signing you in...</span>
           </div>
         </div>
       </div>
@@ -326,7 +317,13 @@ const BidBuilderCreateAccountPage: React.FC = () => {
       <div className="bg-blue-600 text-white p-4">
         <div className="flex items-center space-x-3">
           <button 
-            onClick={() => alert('Going back to login...')}
+            onClick={() => {
+              if (onNavigateToLogin) {
+                onNavigateToLogin();
+              } else {
+                alert('Going back to login...');
+              }
+            }}
             className="p-2 hover:bg-blue-700 rounded-lg transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -646,7 +643,13 @@ const BidBuilderCreateAccountPage: React.FC = () => {
                 Already have an account?{' '}
                 <button 
                   type="button"
-                  onClick={() => alert('Redirecting to login...')}
+                  onClick={() => {
+                    if (onNavigateToLogin) {
+                      onNavigateToLogin();
+                    } else {
+                      alert('Redirecting to login...');
+                    }
+                  }}
                   className="text-blue-600 hover:text-blue-700 font-medium"
                 >
                   Sign in here
