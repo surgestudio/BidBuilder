@@ -445,7 +445,7 @@ const BidBuilder = () => {
           agent_name: formData.agentName,
           agent_email: formData.agentEmail,
           construction_type: formData.poolConstructionType,
-          selected_option: formData.selectedOption,
+          // selected_option: formData.selectedOption,
           pool_configuration: JSON.stringify(formData[`poolOption${formData.selectedOption}`]),
           base_price: pricing.basePoolPrice,
           site_adjustments: pricing.siteAdjustments,
